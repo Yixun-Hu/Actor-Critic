@@ -59,11 +59,18 @@ class A2C(nn.Module):
 
             # Get action from actor
             action_logits = self.actor(observation)
+            # print(f"action_logits: {action_logits}")
+            # action_logits: tensor([0.0769, 0.3220], dtype=torch.float64, grad_fn=<ViewBackward0>)
 
-            action = Categorical(logits=action_logits).sample()
+            dist = Categorical(logits=action_logits)
+            action = dist.sample()
+            # print(f"action: {action}")
+            # action: 1
 
             # Get action probability
-            action_log_prob = action_logits[action]
+            action_log_prob = dist.log_prob(action)
+            # print(f"action_log_prob: {action_log_prob}")
+            # action_log_prob: -0.5780688090522006
 
             # Get value from critic
             pred = torch.squeeze(self.critic(observation).view(-1))
@@ -122,16 +129,49 @@ class A2C(nn.Module):
         return sum(rewards)
 
     @staticmethod
-    def compute_loss(action_p_vals, G, V, critic_loss=nn.SmoothL1Loss()):
+    def compute_loss(
+        action_p_vals: torch.Tensor,
+        G: torch.Tensor,
+        V: torch.Tensor,
+        critic_loss: nn.Module | None = None
+    ) -> tuple[torch.Tensor, torch.Tensor]:
         """
-        Actor Advantage Loss, where advantage = G - V
-        Critic Loss, using mean squared error
-        :param critic_loss: loss function for critic   :Pytorch loss module
-        :param action_p_vals: Action Log Probabilities  :Tensor
-        :param G: Actual Expected Returns   :Tensor
-        :param V: Predicted Expected Returns    :Tensor
-        :return: Actor loss tensor, Critic loss tensor  :Tensor
+        Compute actor and critic losses for the A2C update.
+
+        Parameters
+        ----------
+        action_p_vals : torch.Tensor
+            Log probabilities of sampled actions at each timestep.
+            Shape should match ``G`` and ``V`` (typically ``[T]``).
+        G : torch.Tensor
+            Discounted returns for each timestep (target values for critic).
+            Shape should match ``action_p_vals`` and ``V``.
+        V : torch.Tensor
+            Critic-predicted state values for each timestep.
+            Shape should match ``action_p_vals`` and ``G``.
+        critic_loss : nn.Module | None, optional
+            Critic loss function module. If ``None``, ``nn.SmoothL1Loss()``
+            is used.
+
+        Returns
+        -------
+        tuple[torch.Tensor, torch.Tensor]
+            A tuple ``(actor_loss, critic_loss_value)`` where both are scalar
+            tensors used for backpropagation.
+
+        Raises
+        ------
+        AssertionError
+            Raised when ``action_p_vals``, ``G``, and ``V`` do not share the
+            same shape.
         """
-        assert len(action_p_vals) == len(G) == len(V)
+        if critic_loss is None:
+            critic_loss = nn.SmoothL1Loss()
+
+        assert action_p_vals.shape == G.shape == V.shape
+
+        # Detach V so actor loss does not backpropagate into critic network.
         advantage = G - V.detach()
-        return -(torch.sum(action_p_vals * advantage)), critic_loss(G, V)
+        actor_loss = -(torch.sum(action_p_vals * advantage))
+        critic_loss_value = critic_loss(V, G)
+        return actor_loss, critic_loss_value
