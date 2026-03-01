@@ -18,18 +18,18 @@ Cart-Pole is a game in which the player (in this case, our agent) attempts to ba
 Side-by-side comparison of random agent (takes random actions) and trained A2C agent:
 
 <p float="left">  
-    <img src="https://github.com/Lucasc-99/Actor-Critic/blob/master/res/unsolved-cartpole-v0_2.gif" width="300" height="200" />
-    <img src="https://github.com/Lucasc-99/Actor-Critic/blob/master/res/solved-cartpole-v0_1.gif" width="300" height="200" />
+    <img src="res/unsolved-cartpole-v0_2.gif" width="300" height="200" />
+    <img src="res/solved-cartpole-v0_1.gif" width="300" height="200" />
 </p>
 
 
 Rewards at each episode for 4 seperate trials:
 
 <p float="left">
-   <img src="https://github.com/Lucasc-99/Actor-Critic/blob/master/res/cartpoledata_1.png" width="400" height="300" />
-   <img src="https://github.com/Lucasc-99/Actor-Critic/blob/master/res/cartpoledata_2.png" width="400" height="300" />
-   <img src="https://github.com/Lucasc-99/Actor-Critic/blob/master/res/cartpoledata_3.png" width="400" height="300" />
-  <img src="https://github.com/Lucasc-99/Actor-Critic/blob/master/res/cartpoledata_5.png" width="400" height="300" />
+   <img src="res/cartpoledata_1.png" width="400" height="300" />
+   <img src="res/cartpoledata_2.png" width="400" height="300" />
+   <img src="res/cartpoledata_3.png" width="400" height="300" />
+  <img src="res/cartpoledata_5.png" width="400" height="300" />
 </p>
 
 Training can be quite unstable, even with extensive hyperparameter tuning
@@ -87,13 +87,14 @@ This implementation of A2C uses two neural networks:
    
 2. Install Pytorch and Gym
    ```sh
-   $ pip3 install torch
-   $ pip3 install gym
+   $ conda create -n a2c python=3.10
+   $ conda activate a2c
+   $ pip install -r requirements.txt
    ```
  
 3. Run scripts
    ```sh
-   $ python3 -m src.cart-pole-baseline.py
-   $ python3 -m src.cart-pole-a2c.py
+   $ python -m scripts.cart-pole-baseline
+   $ python -m scripts.cart-pole-a2c
    ```
 
