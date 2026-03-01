@@ -15,7 +15,7 @@ SEED = None  # Random seed for reproducibility
 MAX_EPISODES = 10000  # Max number of episodes
 
 # Init actor-critic agent
-agent = A2C(gym.make('CartPole-v0'), random_seed=SEED)
+agent = A2C(gym.make('CartPole-v1'), random_seed=SEED)
 
 # Init optimizers
 actor_optim = optim.Adam(agent.actor.parameters(), lr=LR)
