@@ -3,3 +3,4 @@ torch==2.10.0
 gym==0.25.2
 numpy==1.26.4
 pygame==2.6.1
+gym[box2d]==0.25.2

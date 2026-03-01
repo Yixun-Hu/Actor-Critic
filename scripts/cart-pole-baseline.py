@@ -8,7 +8,7 @@ Baseline: Agent selects moves at random
 
 import gym
 
-env = gym.make('CartPole-v0')
+env = gym.make('CartPole-v1')
 
 observation = env.reset()
 
