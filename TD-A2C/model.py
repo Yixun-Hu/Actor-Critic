@@ -6,7 +6,6 @@
     Python Version: 3.7
 '''
 
-import torch
 import torch.nn as nn
 
 class A2CNetwork(nn.Module):
