@@ -98,3 +98,18 @@ This implementation of A2C uses two neural networks:
    $ python -m scripts.cart-pole-a2c
    ```
 
+## Run Q-Learning
+
+```bash
+pip install matplotlib
+
+python q_learning.py
+```
+
+## Run TD-A2C
+
+```bash
+pip install tqdm
+
+python TD-A2C/td-a2c.py
+```
