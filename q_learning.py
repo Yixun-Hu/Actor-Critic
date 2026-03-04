@@ -195,9 +195,16 @@ class Agent:
         
     #plot the reward vs episodes
     def plot(self,episodes):
-        
+        plt.figure(figsize=(8, 5))
         plt.plot(self.plot_reward)
-        plt.show()
+        plt.title('Q-learning: Episode vs Reward')
+        plt.xlabel('Episode')
+        plt.ylabel('Cumulative Reward')
+        plt.grid(alpha=0.3)
+        output_path = f'q_learning_rewards_{episodes}.png'
+        plt.savefig(output_path, dpi=150, bbox_inches='tight')
+        plt.close()
+        print(f'Reward curve saved to {output_path}')
         
         
     #iterate through the board and find largest Q value in each, print output
